@@ -7,34 +7,45 @@ export class QuoteClass extends Component {
         this.state={
             quote:'',
             author: '',
+            genre:'',
             api: 'https://quote-garden.herokuapp.com/api/v3/quotes/random'
         }
-        this.getQuote=this.getQuote.bind(this);
+        // this.getQuote=this.getQuote.bind(this);
     }
     getQuote = () =>{
         
         axios.get(this.state.api)
             .then(res => {
-                const {quoteText, quoteAuthor}=res.data.data[0];
+                const {quoteText, quoteAuthor,quoteGenre}=res.data.data[0];
                 this.setState({
                     quote: quoteText,
-                    author: quoteAuthor
+                    author: quoteAuthor,
+                    genre: quoteGenre
                 })
 
             })
     }
 
     render() {
-        const {quote,author} = this.state;
+        const {quote,author,genre} = this.state;
         return (
-        <div>
-            <h4>Click this button</h4>
-            <button onClick={this.getQuote}>Get Quote</button>
+            <div class="card">
+                <div class="card-header">
+                    <label>Quote for today -> </label>
+                    <button className='btn btn-warning' onClick={this.getQuote}>Get Quote</button>
+                </div>
+                <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                        {quote && (<p>{quote}</p>)}
+                        <footer class="blockquote-footer">
+                            {author && (<small>Quote by: {author} in Genre </small>)} 
+                            <cite title="Source Title">{genre && (<small>{genre}</small>)}</cite>
+                        </footer>
+                    </blockquote>
+                </div>
+            </div>
 
-            {quote && (<p>{quote}</p>)}
-            {author && (<small>Quote by: {author}</small>)}
 
-        </div>
         )
     }
 }
